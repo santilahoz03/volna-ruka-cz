@@ -1,0 +1,643 @@
+<!doctype html>
+<html lang="cs">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow">
+<title>Volná Ruka — Přístup k materiálům</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Commissioner:wght@400;500;600;700;800&family=Literata:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #F4EFE4;
+  --paper: #FBF8F1;
+  --ink: #2B2A27;
+  --ink-soft: #46433C;
+  --accent: #B04A2B;
+  --accent-dark: #8C2F39;
+  --accent-pale: #F0E0D8;
+  --line: #D8CFBC;
+  --green: #3A6B4A;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+html, body { background: var(--bg); color: var(--ink); }
+body { font-family: 'Commissioner', -apple-system, Arial, sans-serif; line-height: 1.6; -webkit-font-smoothing: antialiased; }
+h1, h2, h3, h4 { font-family: 'Literata', Georgia, serif; line-height: 1.2; }
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }
+
+/* ── Layout ── */
+.wrap { max-width: 1040px; margin: 0 auto; padding: 0 20px; }
+.wrap-sm { max-width: 720px; margin: 0 auto; padding: 0 20px; }
+
+/* ── Hero ── */
+.hero {
+  background: linear-gradient(150deg, var(--accent-dark) 0%, var(--accent) 100%);
+  color: var(--paper);
+  padding: 56px 0 80px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+.hero::before {
+  content: '';
+  position: absolute; inset: 0;
+  background-image: repeating-linear-gradient(
+    45deg,
+    rgba(255,255,255,.025) 0px,
+    rgba(255,255,255,.025) 1px,
+    transparent 1px,
+    transparent 12px
+  );
+}
+.hero .kicker {
+  display: inline-block;
+  border: 1.5px solid rgba(255,255,255,.55);
+  border-radius: 99px;
+  padding: 5px 16px;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  margin-bottom: 18px;
+  position: relative;
+}
+.hero h1 {
+  font-size: clamp(30px, 6vw, 52px);
+  font-weight: 700;
+  margin-bottom: 12px;
+  position: relative;
+}
+.hero h1 em { font-style: italic; font-weight: 400; opacity: .85; }
+.hero .sub {
+  font-size: clamp(16px, 2.5vw, 20px);
+  opacity: .92;
+  max-width: 600px;
+  margin: 0 auto 24px;
+  position: relative;
+}
+.pills {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  position: relative;
+}
+.pill {
+  background: rgba(255,255,255,.18);
+  border: 1px solid rgba(255,255,255,.38);
+  border-radius: 99px;
+  padding: 8px 18px;
+  font-weight: 700;
+  font-size: 14px;
+}
+
+/* ── Start card (floats over hero) ── */
+.start-card {
+  position: relative;
+  margin: -44px auto 48px;
+  background: var(--paper);
+  border: 2px solid var(--accent);
+  border-radius: 20px;
+  padding: 28px 32px;
+  box-shadow: 0 20px 50px rgba(0,0,0,.12);
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 20px;
+  align-items: start;
+}
+.start-icon {
+  width: 56px; height: 56px;
+  background: var(--accent);
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.start-icon svg { width: 28px; height: 28px; }
+.start-card h2 { font-size: 22px; margin-bottom: 6px; }
+.start-card p { color: var(--ink-soft); font-size: 15px; margin-bottom: 14px; }
+.btn-primary {
+  display: inline-flex; align-items: center; gap: 8px;
+  background: var(--accent);
+  color: var(--paper);
+  border-radius: 12px;
+  padding: 12px 22px;
+  font-weight: 800;
+  font-size: 16px;
+  box-shadow: 0 4px 0 var(--accent-dark);
+  transition: filter .15s;
+}
+.btn-primary:hover { filter: brightness(1.07); }
+
+/* ── Section ── */
+.section { margin-bottom: 52px; }
+.section-header { margin-bottom: 20px; }
+.section-label {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+.section-header h2 { font-size: clamp(22px, 4vw, 30px); }
+.section-header p { color: var(--ink-soft); margin-top: 6px; font-size: 15px; }
+
+/* ── Sešit cards (numbered) ── */
+.sesit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 14px;
+}
+.sesit-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 18px;
+  overflow: hidden;
+  transition: transform .15s, border-color .15s, box-shadow .15s;
+  display: flex; flex-direction: column;
+}
+.sesit-card:hover {
+  transform: translateY(-3px);
+  border-color: var(--accent);
+  box-shadow: 0 10px 28px rgba(176,74,43,.12);
+}
+.sesit-cover {
+  height: 130px;
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+}
+.sesit-number-bg {
+  position: absolute;
+  right: -16px; top: -16px;
+  font-family: 'Literata', serif;
+  font-size: 120px;
+  font-weight: 700;
+  line-height: 1;
+  color: rgba(255,255,255,.12);
+  pointer-events: none;
+  user-select: none;
+}
+.sesit-cover-text {
+  position: relative;
+  text-align: center;
+  color: var(--paper);
+}
+.sesit-cover-text .num {
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  opacity: .8;
+  margin-bottom: 4px;
+}
+.sesit-cover-text h3 { font-size: 20px; font-weight: 700; }
+.sesit-icon { font-size: 32px; margin-bottom: 8px; line-height: 1; }
+.sesit-body { padding: 16px 18px 18px; flex: 1; display: flex; flex-direction: column; gap: 6px; }
+.sesit-body p { color: var(--ink-soft); font-size: 14px; flex: 1; }
+.sesit-meta { display: flex; align-items: center; justify-content: space-between; }
+.sesit-pages { font-size: 13px; color: var(--ink-soft); font-weight: 600; }
+.btn-sesit {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--accent);
+  color: var(--paper);
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  box-shadow: 0 2px 0 var(--accent-dark);
+  transition: filter .12s;
+}
+.btn-sesit:hover { filter: brightness(1.07); }
+
+/* ── Sešit color theming ── */
+.sesit-1 .sesit-cover { background: linear-gradient(135deg, #2B2A27 0%, #46433C 100%); }
+.sesit-2 .sesit-cover { background: linear-gradient(135deg, #3D3228 0%, #6B5040 100%); }
+.sesit-3 .sesit-cover { background: linear-gradient(135deg, #2E4A2E 0%, #3A6B4A 100%); }
+.sesit-4 .sesit-cover { background: linear-gradient(135deg, #5A3040 0%, #8C2F39 100%); }
+.sesit-5 .sesit-cover { background: linear-gradient(135deg, #1E3A5A 0%, #2E5E8A 100%); }
+.sesit-6 .sesit-cover { background: linear-gradient(135deg, #46433C 0%, #B04A2B 100%); }
+
+/* ── Steps ── */
+.steps { display: grid; gap: 12px; }
+.step {
+  display: grid;
+  grid-template-columns: 44px 1fr;
+  gap: 16px;
+  align-items: start;
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 16px 18px;
+}
+.step-num {
+  width: 44px; height: 44px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: var(--paper);
+  font-family: 'Literata', serif;
+  font-size: 20px;
+  font-weight: 700;
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.step h4 { font-size: 16px; margin-bottom: 4px; }
+.step p { color: var(--ink-soft); font-size: 14px; }
+.step a { color: var(--accent); font-weight: 700; }
+
+/* ── Bonus grid ── */
+.bonus-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+}
+.bonus-card {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 16px;
+  padding: 18px;
+  display: flex; flex-direction: column; gap: 8px;
+  transition: transform .12s, border-color .12s;
+}
+.bonus-card:hover { transform: translateY(-2px); border-color: var(--accent); }
+.bonus-emoji { font-size: 26px; line-height: 1; }
+.bonus-card h3 { font-size: 16px; }
+.bonus-card p { color: var(--ink-soft); font-size: 13px; flex: 1; line-height: 1.5; }
+.btn-bonus {
+  display: inline-flex; align-items: center; gap: 5px;
+  border: 1.5px solid var(--accent);
+  color: var(--accent);
+  border-radius: 9px;
+  padding: 7px 14px;
+  font-weight: 800;
+  font-size: 13px;
+  transition: background .12s, color .12s;
+  align-self: flex-start;
+}
+.btn-bonus:hover { background: var(--accent); color: var(--paper); }
+
+/* ── Progress bar decoration ── */
+.journey {
+  background: var(--paper);
+  border: 1.5px solid var(--line);
+  border-radius: 20px;
+  padding: 24px;
+  margin-bottom: 52px;
+}
+.journey-title { font-size: 13px; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); margin-bottom: 16px; }
+.journey-steps {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  overflow-x: auto;
+  padding-bottom: 4px;
+}
+.j-step {
+  display: flex; flex-direction: column; align-items: center;
+  gap: 6px; flex: 1; min-width: 70px;
+}
+.j-bubble {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Literata', serif;
+  font-size: 15px;
+  font-weight: 700;
+  position: relative; z-index: 1;
+}
+.j-bubble.sesit { background: var(--ink); color: var(--paper); }
+.j-bubble.bonus { background: var(--line); color: var(--ink); font-size: 16px; }
+.j-bubble.start { background: var(--accent); color: var(--paper); font-size: 12px; font-family: 'Commissioner',sans-serif; font-weight: 800; }
+.j-label { font-size: 10px; font-weight: 700; text-align: center; color: var(--ink-soft); letter-spacing: .02em; max-width: 64px; line-height: 1.3; }
+.j-line { flex: 1; height: 2px; background: var(--line); min-width: 8px; }
+
+/* ── Footer ── */
+.hub-footer {
+  text-align: center;
+  padding: 16px 0 48px;
+  color: var(--ink-soft);
+  font-size: 13px;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .start-card { grid-template-columns: 1fr; gap: 14px; padding: 22px 20px; }
+  .sesit-grid { grid-template-columns: 1fr 1fr; }
+  .bonus-grid { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 380px) {
+  .sesit-grid { grid-template-columns: 1fr; }
+  .bonus-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="wrap">
+    <span class="kicker">✦ Vítej, umělče ✦</span>
+    <h1>Volná Ruka<br><em>Tvoje materiály jsou připraveny</em></h1>
+    <p class="sub">11 materiálů · 30 dní kreslení · začíná dnes večer</p>
+    <div class="pills">
+      <span class="pill">150+ cvičení</span>
+      <span class="pill">6 sešitů</span>
+      <span class="pill">Záruka 90 dní</span>
+    </div>
+  </div>
+</header>
+
+<!-- MAIN WRAP -->
+<div class="wrap">
+
+  <!-- START CARD -->
+  <div class="start-card">
+    <div class="start-icon">
+      <svg viewBox="0 0 28 28" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+        <path d="M14 4v16M6 12l8 8 8-8"/>
+      </svg>
+    </div>
+    <div>
+      <h2>Kde začít? Tady.</h2>
+      <p>Stáhni <strong>Cestu Nulové Stránky</strong> jako první. Je to tvůj 30denní plán — každý den ti řekne, který sešit otevřít a jaké cvičení udělat. Bez ní se budeš ztrácet.</p>
+      <a class="btn-primary" href="../../cesta-nulove-stranky/e91g3j018l/" target="_blank" rel="noopener">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M8 2v9M3 8l5 5 5-5"/><path d="M2 14h12"/></svg>
+        Otevřít Cestu Nulové Stránky
+      </a>
+    </div>
+  </div>
+
+  <!-- JOURNEY BAR -->
+  <div class="journey">
+    <div class="journey-title">Tvoje cesta — 30 dní</div>
+    <div class="journey-steps">
+      <div class="j-step">
+        <div class="j-bubble start">1.den</div>
+        <div class="j-label">Nulová Stránka</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">1</div>
+        <div class="j-label">Čáry &amp; Kontrola</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">2</div>
+        <div class="j-label">Tvary &amp; Objemy</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">3</div>
+        <div class="j-label">Stromy &amp; Rostliny</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">4</div>
+        <div class="j-label">Květiny &amp; Bylinky</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">5</div>
+        <div class="j-label">Voda</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble sesit">6</div>
+        <div class="j-label">Lidé &amp; Krajiny</div>
+      </div>
+      <div class="j-line"></div>
+      <div class="j-step">
+        <div class="j-bubble bonus">🏆</div>
+        <div class="j-label">Stránka 30</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 6 SEŠITY -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label">Hlavní materiály</div>
+      <h2>6 pracovních sešitů</h2>
+      <p>Každý sešit má 25 cvičení seřazených od nejjednodušších po nejsložitější. Tiskni nebo otevři na tabletu.</p>
+    </div>
+    <div class="sesit-grid">
+
+      <div class="sesit-card sesit-1">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">1</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">✏️</div>
+            <div class="num">Sešit 1</div>
+            <h3>Čáry a Kontrola</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení pro jistou, plynulou čáru — od rovné přes vlnku po spirálu. Základ všeho ostatního.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-1-cary-a-kontrola/qcnsx9ve59/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sesit-card sesit-2">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">2</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">⭕</div>
+            <div class="num">Sešit 2</div>
+            <h3>Tvary a Objemy</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení od základního tvaru ke 3D objemu. Naučíš se stínování, které dá kresbě hloubku.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-2-tvary-a-objemy/twztg5e7th/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sesit-card sesit-3">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">3</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">🌿</div>
+            <div class="num">Sešit 3</div>
+            <h3>Stromy a Rostliny</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení: větvení stromů, siluety, listí, tráva. Každý strom, který vidíš — nakreslíš.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-3-stromy-a-rostliny/f12wu6u7me/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sesit-card sesit-4">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">4</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">🌸</div>
+            <div class="num">Sešit 4</div>
+            <h3>Květiny a Bylinky</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení: od jednoduchého tulipánu po složité bylinky. Detailní práce, trpělivost, preciznost.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-4-kvetiny-a-bylinky/sgaammdpfh/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sesit-card sesit-5">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">5</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">💧</div>
+            <div class="num">Sešit 5</div>
+            <h3>Voda</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení: klidná hladina, odrazy, vlnky, déšť, proudící řeka. Nejtěžší textura — zvládneš ji.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-5-voda/1tdtt0t16i/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <div class="sesit-card sesit-6">
+        <div class="sesit-cover">
+          <div class="sesit-number-bg">6</div>
+          <div class="sesit-cover-text">
+            <div class="sesit-icon">🏔️</div>
+            <div class="num">Sešit 6</div>
+            <h3>Lidé a Krajiny</h3>
+          </div>
+        </div>
+        <div class="sesit-body">
+          <p>25 cvičení: proporce lidské figury, perspektiva, krajinné kompozice. Toto je výsledek celé cesty.</p>
+          <div class="sesit-meta">
+            <span class="sesit-pages">26 stran</span>
+            <a class="btn-sesit" href="../../sesit-6-lide-a-krajiny/5x7t92obzw/" target="_blank" rel="noopener">
+              Otevřít →
+            </a>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /sesit-grid -->
+  </section>
+
+  <!-- HOW TO START -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label">Jak na to</div>
+      <h2>Postup krok za krokem</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <div>
+          <h4>Stáhni Cestu Nulové Stránky</h4>
+          <p>Otevři den 1 a nakreslí svou <strong>Nulovou Stránku</strong> — libovolný předmět z domácnosti. Není to o výsledku: je to tvůj startovní bod. <a href="../../cesta-nulove-stranky/e91g3j018l/" target="_blank" rel="noopener">Stáhnout Cestu →</a></p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <div>
+          <h4>Kresli 15 minut každý den</h4>
+          <p>Cesta ti řekne, který sešit a jaké cvičení dnes otevřít. Nepřeskaž pořadí — každé cvičení staví na předchozím. 15 minut bez obrazovky, každý večer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <div>
+          <h4>Na rušné dny: Kapesní Kartičky</h4>
+          <p>Vytiskni si <a href="../../kapesni-kartickey/srsprzf4ey/" target="_blank" rel="noopener">Kapesní Kartičky</a> — přelož je, dej do kapsy. Jeden cvik kdekoliv, bez sešitu, bez stolu.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">4</div>
+        <div>
+          <h4>Den 30: Porovnej Stránku 0 a Stránku 30</h4>
+          <p>Dej svou Nulovou Stránku a stránku 30 vedle sebe. Ten rozdíl je tvůj důkaz. Žádný talent — jen 30 dní práce.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BONUS MATERIALS -->
+  <section class="section">
+    <div class="section-header">
+      <div class="section-label">Bonusy</div>
+      <h2>Doplňkové materiály</h2>
+      <p>Vše, co ti pomůže na cestě — od nákupního seznamu po průvodce chybami.</p>
+    </div>
+    <div class="bonus-grid">
+
+      <div class="bonus-card">
+        <div class="bonus-emoji">🗺️</div>
+        <h3>Cesta Nulové Stránky</h3>
+        <p>30denní průvodce: každý den jeden pokyn + místo pro Nulovou a 30. stránku.</p>
+        <a class="btn-bonus" href="../../cesta-nulove-stranky/e91g3j018l/" target="_blank" rel="noopener">Otevřít →</a>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-emoji">🃏</div>
+        <h3>Kapesní Kartičky</h3>
+        <p>6 sad karet k vytisknutí a přeložení. Základní cvik vždy v kapse — i bez sešitu.</p>
+        <a class="btn-bonus" href="../../kapesni-kartickey/srsprzf4ey/" target="_blank" rel="noopener">Otevřít →</a>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-emoji">✏️</div>
+        <h3>Tužka a Papír</h3>
+        <p>Přesně co potřebuješ (a co nepotřebuješ) + nákupní seznam pod 300 Kč.</p>
+        <a class="btn-bonus" href="../../tuzka-a-papir/rdgix13syj/" target="_blank" rel="noopener">Otevřít →</a>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-emoji">🚫</div>
+        <h3>Ošklivé Chyby</h3>
+        <p>20 nejčastějších chyb začátečníků, každá s opravou na jeden řádek. Přečti před sešitem 1.</p>
+        <a class="btn-bonus" href="../../osklive-chyby/qw09melayb/" target="_blank" rel="noopener">Otevřít →</a>
+      </div>
+
+      <div class="bonus-card">
+        <div class="bonus-emoji">📱</div>
+        <h3>Verze pro Tablet</h3>
+        <p>Všech 150+ cvičení ve formátu landscape pro iPad a Android tablet. Žádný tisk.</p>
+        <a class="btn-bonus" href="../../verze-pro-tablet/qvfa1dgsfv/" target="_blank" rel="noopener">Otevřít →</a>
+      </div>
+
+    </div>
+  </section>
+
+</div><!-- /wrap -->
+
+<footer class="hub-footer">
+  <p>Pouze pro osobní použití · Prodej nebo další šíření je zakázáno</p>
+</footer>
+
+</body>
+</html>
